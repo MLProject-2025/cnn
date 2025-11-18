@@ -1,0 +1,93 @@
+import os
+import glob
+from PIL import Image
+from tqdm import tqdm
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- 설정 ---
+# 데이터가 저장된 루트 디렉토리 경 (Colab이나 로컬 경로에 맞게 수정하세요)
+DATA_ROOT = './dataset/univ_ML_basic/deepfake/original' 
+
+# 분석할 카테고리 폴더 이름들
+CATEGORIES = ['inpainting', 'insight', 'text2img', 'wiki']
+
+def analyze_category(category_name):
+    print(f"\n--- Analyzing '{category_name}' ---")
+    
+    category_path = os.path.join(DATA_ROOT, category_name)
+    if not os.path.exists(category_path):
+        print(f"경로를 찾을 수 없음: {category_path}")
+        return None
+
+    # 1. 모든 이미지 경로 수집 (서브 폴더 00~99 포함)
+    extensions = ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.PNG']
+    image_paths = []
+    
+    for ext in extensions:
+        # recursive=True를 사용하여 하위 폴더까지 검색
+        paths = glob.glob(os.path.join(category_path, '**', ext), recursive=True)
+        image_paths.extend(paths)
+    
+    count = len(image_paths)
+    print(f"총 이미지 수: {count}장")
+    
+    if count == 0:
+        return None
+
+    # 2. 이미지 크기 분석 (샘플링)
+    # 모든 이미지를 다 열어보면 너무 오래 걸리므로, 1000장만 랜덤 샘플링해서 크기 확인
+    sample_size = min(1000, count)
+    sampled_paths = np.random.choice(image_paths, sample_size, replace=False)
+    
+    widths = []
+    heights = []
+    
+    print(f"이미지 크기 분석 중 ({sample_size}장 샘플링)...")
+    for img_path in tqdm(sampled_paths):
+        try:
+            with Image.open(img_path) as img:
+                w, h = img.size
+                widths.append(w)
+                heights.append(h)
+        except Exception as e:
+            print(f"Error reading {img_path}: {e}")
+
+    if not widths:
+        return None
+
+    # 3. 통계 출력
+    widths = np.array(widths)
+    heights = np.array(heights)
+    
+    print(f"  [너비 Width]  최소: {widths.min()}, 최대: {widths.max()}, 평균: {widths.mean():.1f}")
+    print(f"  [높이 Height] 최소: {heights.min()}, 최대: {heights.max()}, 평균: {heights.mean():.1f}")
+    
+    return {
+        'count': count,
+        'widths': widths,
+        'heights': heights
+    }
+
+def main():
+    if not os.path.exists(DATA_ROOT):
+        print(f"오류: 데이터 루트 경로 '{DATA_ROOT}'가 존재하지 않습니다.")
+        print("경로를 확인해주세요.")
+        return
+
+    stats = {}
+    
+    for cat in CATEGORIES:
+        stats[cat] = analyze_category(cat)
+        
+    # (선택) 간단한 시각화: 카테고리별 데이터 수 비교
+    print("\n=== 종합 요약 ===")
+    valid_categories = [cat for cat in CATEGORIES if stats[cat] is not None]
+    counts = [stats[cat]['count'] for cat in valid_categories]
+    
+    print(f"발견된 카테고리: {valid_categories}")
+    print(f"카테고리별 수량: {counts}")
+    print(f"전체 데이터 총합: {sum(counts)}장")
+
+if __name__ == "__main__":
+    main()
