@@ -1,3 +1,10 @@
+"""
+Image preprocessing utility with resize and padding.
+
+This script provides functions to resize images while maintaining aspect ratio
+using padding. It also includes batch processing capabilities for dataset preparation.
+"""
+
 import os
 import glob
 import numpy as np

@@ -1,3 +1,10 @@
+"""
+Dataset analysis and statistics utility for deepfake detection.
+
+This script analyzes the dataset to provide statistics on file counts,
+file types, and image dimensions.
+"""
+
 import os
 import glob
 import random
