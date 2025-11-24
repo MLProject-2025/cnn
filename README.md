@@ -2,6 +2,11 @@
 
 > Deepfake Detection
 
+#### ✅ 실행 방법
+```bash
+# 레포지토리 clone
+git clone https://github.com/MLProject-2025/cnn.git
+```
 
 #### ✅ 사용 데이터셋
 
