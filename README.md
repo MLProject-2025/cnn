@@ -8,15 +8,20 @@ A comprehensive deep learning project for detecting deepfake images using variou
 cnn/
 ├── data/                       # Dataset samples, metadata, and test records
 │   └── test_records/          # Historical test results and records
-├── augmentation/              # Data augmentation scripts (currently in experiments/)
-├── finetuning/                # Fine-tuning code and pretrained model logic (currently in experiments/)
-├── models/                    # Model definitions (to be organized)
-├── training/                  # Training loops, dataloaders, loss, optimizer (to be organized)
-├── evaluation/                # Test scripts, metrics, result logging (to be organized)
+├── augmentation/              # Data augmentation scripts
+│   └── visualize_aug.py      # Augmentation visualization
+├── finetuning/                # Fine-tuning scripts
+│   └── finetune.py           # Fine-tuning pretrained models
+├── models/                    # Model definitions (available in notebooks)
+├── training/                  # Training scripts
+│   └── train.py              # Training script template
+├── evaluation/                # Test scripts, metrics, result logging
+│   └── test.py               # Evaluation script template
 ├── utils/                     # Preprocessing utilities
 │   ├── data_check.py         # Dataset analysis and statistics
 │   ├── data_loader.py        # Data loading utilities
 │   ├── fourier_transform.py  # Fourier Transform preprocessing
+│   ├── ft_preprocess_demo.py # FT preprocessing demo
 │   └── resize_with_pad.py    # Image resizing with padding
 ├── experiments/               # Jupyter notebooks for experiments and reproducibility
 │   ├── augmentation/         # Augmentation experiment notebooks
@@ -80,7 +85,23 @@ This script will:
 
 ### 3. Training Models
 
-#### Basic Training
+#### Using Training Scripts (Template)
+
+Train a model using command-line interface:
+```bash
+# Train GoogLeNet from scratch
+python training/train.py --model googlenet --epochs 50 --augmentation
+
+# Train ResNet-50
+python training/train.py --model resnet50 --epochs 40 --batch-size 64
+
+# Train with custom settings
+python training/train.py --model alexnet --epochs 30 --lr 0.0001 --data-dir ./dataset/deepfake
+```
+
+**Note:** The above commands are template examples. For working implementations, use the Jupyter notebooks below.
+
+#### Basic Training (Working Notebooks)
 
 The training notebooks are located in `experiments/`. You can run them directly:
 
@@ -104,7 +125,31 @@ This applies augmentation techniques including:
 **Expected Results:**
 - Test Accuracy: ~79.30% with GoogLeNet + augmentation
 
+#### Visualize Augmentation
+
+Preview augmentation techniques:
+```bash
+python augmentation/visualize_aug.py --output-dir ./aug_examples
+```
+
 ### 4. Fine-tuning Pretrained Models
+
+#### Using Fine-tuning Script (Template)
+
+```bash
+# Fine-tune ResNet-50 with pretrained ImageNet weights
+python finetuning/finetune.py --model resnet50 --epochs 20
+
+# Fine-tune GoogLeNet with frozen early layers
+python finetuning/finetune.py --model googlenet --freeze-layers 5 --lr 0.0001
+
+# Fine-tune Vision Transformer
+python finetuning/finetune.py --model vit --batch-size 16
+```
+
+**Note:** The above commands are template examples. For working implementations, use the Jupyter notebooks below.
+
+#### Fine-tuning Notebooks (Working)
 
 Fine-tuning experiments use transfer learning with pretrained models:
 
@@ -132,6 +177,20 @@ jupyter notebook experiments/finetuning/train_vit_finetuning.ipynb
 - Gradually unfreeze layers for better adaptation
 
 ### 5. Fourier Transform Preprocessing
+
+#### Using FT Demo Script
+
+Explore Fourier Transform preprocessing:
+```bash
+# Run demo to see available options
+python utils/ft_preprocess_demo.py
+
+# Apply phase-only transform to an image
+python utils/ft_preprocess_demo.py --image path/to/image.jpg --ft-type 0 --output phase_only.png
+
+# Apply amplitude-only transform
+python utils/ft_preprocess_demo.py --image path/to/image.jpg --ft-type 1 --output amplitude_only.png
+```
 
 The project includes experiments with Fourier Transform-based preprocessing to analyze frequency domain features:
 
@@ -178,7 +237,23 @@ jupyter notebook experiments/fourier_transform/ft_transform.ipynb
 
 ### 6. Model Evaluation
 
-#### Testing Different Architectures
+#### Using Evaluation Script (Template)
+
+Evaluate a trained model:
+```bash
+# Evaluate a GoogLeNet model
+python evaluation/test.py --checkpoint weights/best_model.pth --model googlenet
+
+# Evaluate with custom test set
+python evaluation/test.py --checkpoint checkpoints/resnet50_epoch20.pth --model resnet50 --data-dir ./test_data
+
+# Save detailed results
+python evaluation/test.py --checkpoint model.pth --model alexnet --output detailed_results.txt
+```
+
+**Note:** The above commands are template examples. For working implementations, use the Jupyter notebooks below.
+
+#### Testing Different Architectures (Working Notebooks)
 
 The `experiments/test/` directory contains evaluation notebooks for various models:
 
@@ -275,12 +350,47 @@ pip install -r requirements.txt
 # 2. Download and prepare dataset
 python utils/data_check.py  # Check your dataset
 
-# 3. Run a training experiment
+# 3. (Optional) Test example commands
+python training/train.py --model googlenet --help
+python evaluation/test.py --help
+python finetuning/finetune.py --help
+python utils/ft_preprocess_demo.py
+
+# 4. Run a training experiment
 jupyter notebook experiments/deepfake_baseline_pytorch_local.ipynb
 
-# 4. Evaluate with GradCAM
+# 5. Evaluate with GradCAM
 jupyter notebook experiments/deepfake_with_gradcam.ipynb
 ```
+
+## 📋 Command Reference
+
+### Training
+```bash
+python training/train.py --model googlenet --epochs 50 --augmentation
+```
+
+### Fine-tuning
+```bash
+python finetuning/finetune.py --model resnet50 --epochs 20
+```
+
+### Evaluation
+```bash
+python evaluation/test.py --checkpoint weights/best_model.pth --model googlenet
+```
+
+### Augmentation Visualization
+```bash
+python augmentation/visualize_aug.py --output-dir ./aug_examples
+```
+
+### Fourier Transform Demo
+```bash
+python utils/ft_preprocess_demo.py --ft-type 1
+```
+
+**Note:** The command-line scripts above are templates. For complete working implementations, use the Jupyter notebooks in the `experiments/` directory.
 
 ## 📚 References
 
