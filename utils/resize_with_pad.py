@@ -62,57 +62,57 @@ def find_all_images(root_dir):
     return image_list
 
 def main():
-    print(f"=== 6만개 데이터 전처리(224px) 및 저장 시작 ===")
+    print(f"=== Starting 60k Data Preprocessing (224px) and Saving ===")
     
-    # 목적지 폴더 초기화
+    # Initialize destination folder
     if os.path.exists(DEST_DIR):
-        print(f"기존 '{DEST_DIR}' 폴더 삭제 중...")
+        print(f"Deleting existing '{DEST_DIR}' folder...")
         shutil.rmtree(DEST_DIR)
     
     os.makedirs(os.path.join(DEST_DIR, 'face_real'))
     os.makedirs(os.path.join(DEST_DIR, 'face_fake'))
     
-    # --- 1. 이미지 경로 수집 ---
-    print("\n[1단계] 이미지 경로 수집 및 샘플링...")
+    # --- 1. Collect image paths ---
+    print("\n[Step 1] Collecting and sampling image paths...")
     
     # (1) Real (wiki)
     wiki_path = os.path.join(SOURCE_DATA_DIR, 'wiki')
     real_paths = find_all_images(wiki_path)
-    print(f"  - Real (wiki): {len(real_paths)}장 발견 (전체 사용)")
+    print(f"  - Real (wiki): {len(real_paths)} images found (using all)")
     
-    # (2) Fake (3개 폴더)
+    # (2) Fake (3 folders)
     fake_categories = ['inpainting', 'insight', 'text2img']
-    fake_copy_list = [] # (원본경로, 저장될파일명)
+    fake_copy_list = []  # (source_path, destination_filename)
     
     for cat in fake_categories:
         cat_path = os.path.join(SOURCE_DATA_DIR, cat)
         cat_images = find_all_images(cat_path)
-        print(f"  - Fake ({cat}): {len(cat_images)}장 발견")
+        print(f"  - Fake ({cat}): {len(cat_images)} images found")
         
-        # 샘플링
+        # Sampling
         if len(cat_images) >= TARGET_FAKE_PER_FOLDER:
             sampled = np.random.choice(cat_images, TARGET_FAKE_PER_FOLDER, replace=False).tolist()
         else:
-            print(f"    ⚠️ {cat}: 1만장 부족 -> 전체 사용")
+            print(f"    ⚠️ {cat}: Less than 10k images -> using all")
             sampled = cat_images
             
         for src_path in sampled:
             filename = os.path.basename(src_path)
-            # 파일명 충돌 방지
+            # Prevent filename collisions
             new_filename = f"{cat}_{filename}"
-            # 확장자를 .jpg로 통일 (선택사항)
+            # Standardize extension to .jpg (optional)
             name_only = os.path.splitext(new_filename)[0]
             new_filename = f"{name_only}.jpg"
             
             fake_copy_list.append((src_path, new_filename))
 
     total_files = len(real_paths) + len(fake_copy_list)
-    print(f"\n  => 총 처리할 파일 수: {total_files}장")
+    print(f"\n  => Total files to process: {total_files} images")
 
-    # --- 2. 이미지 처리 및 저장 ---
-    print("\n[2단계] 리사이징(224x224) 및 저장 시작...")
+    # --- 2. Process and save images ---
+    print("\n[Step 2] Starting resize (224x224) and save...")
     
-    # (1) Real 처리
+    # (1) Process Real
     success_count = 0
     error_count = 0
     
@@ -148,9 +148,9 @@ def main():
         except Exception as e:
             error_count += 1
 
-    print(f"\n=== 작업 완료! ===")
-    print(f"성공: {success_count}장, 실패: {error_count}장")
-    print(f"저장 위치: {os.path.abspath(DEST_DIR)}")
+    print(f"\n=== Task Completed! ===")
+    print(f"Success: {success_count} images, Failed: {error_count} images")
+    print(f"Saved to: {os.path.abspath(DEST_DIR)}")
 
 if __name__ == "__main__":
     main()

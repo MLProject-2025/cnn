@@ -80,25 +80,25 @@ def analyze_folder(folder_path):
     }
 
 def main():
-    print(f"=== 데이터셋 정밀 분석 (개수 + 크기) ===")
-    print(f"대상 경로: {os.path.abspath(DATA_ROOT)}\n")
+    print(f"=== Dataset Detailed Analysis (Count + Size) ===")
+    print(f"Target path: {os.path.abspath(DATA_ROOT)}\n")
 
     if not os.path.exists(DATA_ROOT):
-        print(f"❌ 오류: '{DATA_ROOT}' 폴더가 없습니다.")
+        print(f"❌ Error: '{DATA_ROOT}' folder not found.")
         return
 
     try:
         subfolders = [f for f in os.listdir(DATA_ROOT) if os.path.isdir(os.path.join(DATA_ROOT, f))]
         subfolders.sort()
     except Exception as e:
-        print(f"오류: {e}")
+        print(f"Error: {e}")
         return
 
     if not subfolders:
-        print("❌ 하위 폴더가 없습니다.")
+        print("❌ No subfolders found.")
         return
 
-    print(f"{'폴더명':<12} | {'파일 수':<9} | {'이미지 수':<9} | {'평균 크기 (WxH)':<18} | {'확장자 분포'}")
+    print(f"{'Folder Name':<12} | {'Files':<9} | {'Images':<9} | {'Avg Size (WxH)':<18} | {'Extensions'}")
     print("-" * 95)
 
     total_images_sum = 0
@@ -108,10 +108,10 @@ def main():
         result = analyze_folder(folder_path)
         
         if result is None:
-            print(f"{folder:<12} | {'경로 없음':<9} |")
+            print(f"{folder:<12} | {'Path N/A':<9} |")
             continue
             
-        # 결과 포매팅
+        # Format results
         count_str = f"{result['total']:,}"
         img_count_str = f"{result['img_count']:,}"
         
@@ -119,7 +119,7 @@ def main():
         h_mean = result['h_stats']['mean']
         size_str = f"{w_mean:.0f}x{h_mean:.0f}" if w_mean > 0 else "N/A"
         
-        # 주요 확장자만 표시 (상위 3개)
+        # Show only major extensions (top 3)
         top_exts = result['exts'].most_common(3)
         ext_str = ", ".join([f"{k} {v}" for k, v in top_exts])
         
@@ -128,8 +128,8 @@ def main():
         total_images_sum += result['img_count']
 
     print("-" * 95)
-    print(f"총 이미지 파일 합계: {total_images_sum:,} 장")
-    print("※ 평균 크기는 폴더별 최대 1,000장 샘플링 기준입니다.")
+    print(f"Total image files: {total_images_sum:,} images")
+    print("※ Average size is based on sampling up to 1,000 images per folder.")
 
 if __name__ == "__main__":
     main()
