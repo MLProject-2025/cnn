@@ -1,0 +1,23 @@
+# Deep Learning Framework
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Image Processing
+Pillow>=9.0.0
+opencv-python>=4.7.0
+
+# Scientific Computing
+numpy>=1.24.0
+
+# Machine Learning
+scikit-learn>=1.2.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Utilities
+tqdm>=4.65.0
+
+# Jupyter (for running notebooks)
+jupyter>=1.0.0
+ipykernel>=6.22.0
