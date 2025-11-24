@@ -56,14 +56,14 @@ def analyze_folder(folder_path):
         widths = []
         heights = []
         
-        for img_path in tqdm(sampled_paths, desc=f"   📏 크기 측정 중 ({len(sampled_paths)}장)", leave=False):
+        for img_path in tqdm(sampled_paths, desc=f"   📏 Measuring sizes ({len(sampled_paths)} images)", leave=False):
             try:
                 with Image.open(img_path) as img:
                     w, h = img.size
                     widths.append(w)
                     heights.append(h)
             except Exception:
-                pass # 깨진 이미지는 무시
+                pass  # Ignore corrupted images
         
         if widths:
             widths = np.array(widths)

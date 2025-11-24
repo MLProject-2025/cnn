@@ -119,27 +119,27 @@ def main():
     for src_path in tqdm(real_paths, desc="Processing Real"):
         try:
             with Image.open(src_path) as img:
-                # 리사이즈 + 패딩 함수 호출
+                # Call resize + padding function
                 processed_img = resize_with_pad(img, TARGET_SIZE)
                 
-                # 저장 경로
+                # Save path
                 filename = os.path.basename(src_path)
                 name_only = os.path.splitext(filename)[0]
-                save_name = f"{name_only}.jpg" # jpg로 통일
+                save_name = f"{name_only}.jpg"  # standardize to jpg
                 dst_path = os.path.join(DEST_DIR, 'face_real', save_name)
                 
-                # 저장 (압축률 90 정도면 화질 좋음)
+                # Save (quality=95 for good image quality)
                 processed_img.save(dst_path, quality=95)
                 success_count += 1
         except Exception as e:
             # print(f"Error processing {src_path}: {e}")
             error_count += 1
 
-    # (2) Fake 처리
+    # (2) Process Fake images
     for src_path, save_name in tqdm(fake_copy_list, desc="Processing Fake"):
         try:
             with Image.open(src_path) as img:
-                # 이미 512x512라도 224x224로 줄임
+                # Resize to 224x224 even if already 512x512
                 processed_img = resize_with_pad(img, TARGET_SIZE)
                 
                 dst_path = os.path.join(DEST_DIR, 'face_fake', save_name)
