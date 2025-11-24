@@ -1,9 +1,9 @@
-파일명: ```cnn/deepfake_baseline_pytorch_colab_googleNet.ipynb```
+파일경로: ```cnn/augmentation/deepfake_baseline_pytorch_colab_googleNet.ipynb```
 
 데이터셋: Google Drive에 업로드한 real_fake_dataset을 사용하여 68,479장의 이미지 중 10,000장을 균등 샘플링하여 학습·검증·테스트 셋으로 분할함.
 https://www.kaggle.com/datasets/malekbennabi/realfake-cropped-faces
 
-사용 모델: GoogleNet
+사용 모델: ```GoogleNet```
 
 데이터 증강: Train set에만 augmentation을 적용함
 ```python
