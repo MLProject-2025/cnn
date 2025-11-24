@@ -15,4 +15,4 @@
 
 | Contributor | Contributor | Contributor | Contributor |
 |------------|-------------|-------------|-------------|
-| <img src="https://avatars.githubusercontent.com/woals2840" width="100px;"><br/>**곽재민**</a> | <img src="https://avatars.githubusercontent.com/u/169603063?v=4" width="100px"><br/>**박동욱**</a> |<img src="https://avatars.githubusercontent.com/u/162528062?v=4" width="100px"><br/>**이예영**</a> | <img src="https://avatars.githubusercontent.com/u/161849407?v=4" width="100px"><br/>**이채은**</a> |
+| <img src="https://avatars.githubusercontent.com/woals2840" width="100px;"><br/>**곽재민**</a> | <img src="https://avatars.githubusercontent.com/u/169603063?v=4" width="100px"><br/>**박동욱**</a> |<img src="https://avatars.githubusercontent.com/u/162528062?v=4" width="100px"><br/>**이예영**</a> | <img src="https://avatars.githubusercontent.com/u/161849407?v=4" width="100px"><br/>**이채윤**</a> |
