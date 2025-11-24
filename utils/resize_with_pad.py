@@ -12,48 +12,48 @@ import shutil
 from PIL import Image
 from tqdm import tqdm
 
-# --- 설정 ---
+# --- Configuration ---
 SOURCE_DATA_DIR = './dataset/univ_ML_basic/deepfake/original' 
-DEST_DIR = './deepfake_60k_224px' # 새로 만들어질 폴더 이름
-TARGET_SIZE = 224 # 목표 크기
-TARGET_FAKE_PER_FOLDER = 10000 # Fake 폴더당 샘플링 개수
+DEST_DIR = './deepfake_60k_224px'  # Name of folder to be created
+TARGET_SIZE = 224  # Target size
+TARGET_FAKE_PER_FOLDER = 10000  # Number of samples per Fake folder
 
-# 이미지 확장자 정의
+# Define image extensions
 VALID_EXTENSIONS = ('.jpg',)
 
 def resize_with_pad(img, target_size):
     """
-    이미지를 target_size x target_size 캔버스 중앙에
-    비율을 유지하며 리사이징하여 붙여넣습니다 (검은색 패딩).
+    Resize an image to target_size x target_size while maintaining aspect ratio,
+    with padding to center it (black padding).
     """
-    # RGBA(투명)인 경우 RGB로 변환 (저장 시 오류 방지)
+    # Convert RGBA (transparent) to RGB (prevents save errors)
     if img.mode == 'RGBA':
         img = img.convert('RGB')
         
     w, h = img.size
     
-    # 비율 유지 리사이즈 계산
+    # Calculate resize maintaining aspect ratio
     scale = target_size / max(w, h)
     new_w = int(w * scale)
     new_h = int(h * scale)
     
-    # 리사이징 (LANCZOS: 고품질)
+    # Resize (LANCZOS: high quality)
     img_resized = img.resize((new_w, new_h), Image.LANCZOS)
     
-    # 검은색 배경 생성
+    # Create black background
     new_img = Image.new("RGB", (target_size, target_size), (0, 0, 0))
     
-    # 중앙 좌표 계산
+    # Calculate center coordinates
     paste_x = (target_size - new_w) // 2
     paste_y = (target_size - new_h) // 2
     
-    # 붙여넣기
+    # Paste onto center
     new_img.paste(img_resized, (paste_x, paste_y))
     
     return new_img
 
 def find_all_images(root_dir):
-    """os.walk로 모든 하위 이미지 찾기"""
+    """Find all images in subdirectories using os.walk"""
     image_list = []
     for root, dirs, files in os.walk(root_dir):
         for file in files:

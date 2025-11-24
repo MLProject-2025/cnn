@@ -13,16 +13,16 @@ from collections import Counter
 from PIL import Image
 from tqdm import tqdm
 
-# --- 설정 ---
-DATA_ROOT = './dataset/univ_ML_basic/deepfake/original' # 데이터가 있는 루트 폴더
-SAMPLE_SIZE_FOR_SIZE_CHECK = 1000 # 크기 분석을 위해 몇 장을 샘플링할지
+# --- Configuration ---
+DATA_ROOT = './dataset/univ_ML_basic/deepfake/original'  # Root folder containing the dataset
+SAMPLE_SIZE_FOR_SIZE_CHECK = 1000  # Number of images to sample for size analysis
 
-# 이미지로 간주할 확장자들
+# Image file extensions to consider
 IMAGE_EXTS = {'.jpg'}
 
 def analyze_folder(folder_path):
     """
-    폴더 내의 파일 개수, 확장자 분포, 그리고 이미지 크기 통계를 반환합니다.
+    Returns file counts, extension distribution, and image size statistics for a folder.
     """
     if not os.path.exists(folder_path):
         return None
@@ -31,8 +31,8 @@ def analyze_folder(folder_path):
     extension_counts = Counter()
     all_image_paths = []
 
-    # 1. 파일 스캔 (os.walk로 구석구석 찾기)
-    print(f"   📂 스캔 중... '{os.path.basename(folder_path)}'")
+    # 1. Scan files (recursively search with os.walk)
+    print(f"   📂 Scanning... '{os.path.basename(folder_path)}'")
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             total_files += 1
@@ -42,12 +42,12 @@ def analyze_folder(folder_path):
             if ext in IMAGE_EXTS:
                 all_image_paths.append(os.path.join(root, file))
     
-    # 2. 이미지 크기 분석 (샘플링)
+    # 2. Image size analysis (sampling)
     width_stats = {'min': 0, 'max': 0, 'mean': 0}
     height_stats = {'min': 0, 'max': 0, 'mean': 0}
     
     if all_image_paths:
-        # 샘플링 (전체 개수가 샘플 수보다 적으면 전체 사용)
+        # Sampling (use all if total count is less than sample size)
         if len(all_image_paths) > SAMPLE_SIZE_FOR_SIZE_CHECK:
             sampled_paths = random.sample(all_image_paths, SAMPLE_SIZE_FOR_SIZE_CHECK)
         else:
