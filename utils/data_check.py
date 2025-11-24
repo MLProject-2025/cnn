@@ -76,7 +76,7 @@ def analyze_folder(folder_path):
         'exts': extension_counts,
         'w_stats': width_stats,
         'h_stats': height_stats,
-        'img_count': len(all_image_paths) # 실제 이미지 파일 수
+        'img_count': len(all_image_paths)  # actual number of image files
     }
 
 def main():
